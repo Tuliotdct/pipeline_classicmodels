@@ -1,0 +1,5 @@
+--constraint "https://raw.githubusercontent.com/apache/airflow/constraints-3.0.6/constraints-3.12.txt"
+boto3==1.39.11
+SQLAlchemy==1.4.54
+pyspark==4.0.0
+psycopg2-binary==2.9.10
