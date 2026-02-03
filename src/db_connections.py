@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine
-from sqlalchemy import URL
+from sqlalchemy.engine import URL
 from .aws_secrets import get_secret
-
 
 def get_connection():
 
