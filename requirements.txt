@@ -2,6 +2,7 @@
 boto3==1.39.11
 botocore==1.39.11
 jmespath==0.10.0
+pendulum==3.1.0
 psycopg2-binary==2.9.10
 py4j==0.10.9.9
 pyspark==4.0.0
