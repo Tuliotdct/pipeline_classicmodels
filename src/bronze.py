@@ -10,7 +10,7 @@ def create_spark_session():
             "org.apache.hadoop:hadoop-aws:3.4.1,"
             "com.amazonaws:aws-java-sdk-bundle:1.12.767") \
     .config("spark.hadoop.fs.s3a.aws.credentials.provider",
-            "software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider") \
+            "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider") \
     .getOrCreate()
 
     return spark
@@ -38,4 +38,8 @@ def create_bronze_for_table(table_name):
 
     read_db_tables.write.mode("overwrite").parquet(f"s3a://lakehouse-classicmodels/bronze/{table_name}")
 
-    return read_db_tables
+    count = read_db_tables.count()
+    
+    spark.stop()
+    
+    return {"table": table_name, "records": count, "status": "success"}
