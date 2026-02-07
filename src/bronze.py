@@ -1,6 +1,4 @@
-from sqlalchemy import inspect
 from pyspark.sql import SparkSession
-from .db_connections import get_connection
 from .aws_secrets import get_secret
 
 def create_spark_session():
@@ -40,11 +38,4 @@ def create_bronze_for_table(table_name):
 
     read_db_tables.write.mode("overwrite").parquet(f"s3a://lakehouse-classicmodels/bronze/{table_name}")
 
-    return read_db_tables.show(5)
-
-conn = get_connection()
-insp = inspect(conn)
-tables = insp.get_table_names()
-
-for table in tables:
-    create_bronze_for_table(table)
+    return read_db_tables
