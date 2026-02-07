@@ -9,9 +9,9 @@ from src.bronze import create_bronze_for_table
     schedule='@daily',
     start_date=pendulum.datetime(2026,2,7),
     catchup=False,
-    tags=['pipeline','medallion architecture', 'bronze']
+    tags=['pipeline','medallion architecture', 'bronze'],
+    max_active_tasks=1
 )
-
 
 
 def bronze_dag():
