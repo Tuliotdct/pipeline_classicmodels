@@ -1,9 +1,12 @@
 from airflow.sdk import dag, task, TaskGroup
 from airflow.providers.standard.operators.empty import EmptyOperator
 import pendulum
-from src.db_tables import get_db_tables
 from src.bronze import create_bronze_for_table
+import pandas as pd
 
+tables = pd.read_csv('src/config/db_tables.txt', header=None).squeeze().tolist()
+
+print(tables)
 @dag(
     dag_id='bronze_dag',
     schedule='@daily',
@@ -23,7 +26,7 @@ def bronze_dag():
         def load_single_table_bronze(table_name):
             return create_bronze_for_table(table_name)
         
-        tables = get_db_tables()
+        tables = pd.read_csv('src/config/db_tables.txt').squeeze().tolist()
 
         for table in tables:
             bronze_task = load_single_table_bronze.override(task_id=f'{table}')(table_name=table)
