@@ -1,7 +1,7 @@
 from airflow.sdk import dag, task, TaskGroup
 from airflow.providers.standard.operators.empty import EmptyOperator
 import pendulum
-from src.bronze import create_bronze_for_table
+from src.medallion_architecture.bronze import create_bronze_for_table
 import pandas as pd
 
 tables = pd.read_csv('src/config/db_tables.txt', header=None).squeeze().tolist()
@@ -15,7 +15,6 @@ print(tables)
     tags=['pipeline','medallion architecture', 'bronze'],
     max_active_tasks=1
 )
-
 
 def bronze_dag():
 
