@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-from .aws_secrets import get_secret
+from src.connections.aws_secrets import get_secret
 
 def create_spark_session():
         
