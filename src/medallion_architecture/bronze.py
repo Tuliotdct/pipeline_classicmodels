@@ -1,8 +1,15 @@
 from pyspark.sql import SparkSession
 from src.connections.aws_secrets import get_secret
+from dotenv import load_dotenv
+import os
 
 def create_spark_session():
-        
+
+    load_dotenv()
+
+    aws_access_key = os.getenv("AWS_ACCESS_KEY_ID")
+    aws_secret_key = os.getenv("AWS_SECRET_ACCESS_KEY")
+
     spark = SparkSession.builder \
     .appName("classicmodels-extract") \
     .config("spark.jars.packages",
@@ -11,6 +18,8 @@ def create_spark_session():
             "com.amazonaws:aws-java-sdk-bundle:1.12.767") \
     .config("spark.hadoop.fs.s3a.aws.credentials.provider",
             "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider") \
+    .config("spark.hadoop.fs.s3a.access.key", aws_access_key) \
+    .config("spark.hadoop.fs.s3a.secret.key", aws_secret_key) \
     .getOrCreate()
 
     return spark
