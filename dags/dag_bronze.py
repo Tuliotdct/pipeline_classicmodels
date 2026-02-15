@@ -22,8 +22,9 @@ def bronze_dag():
 
     with TaskGroup(group_id='bronze_jobs') as bronze_group:
         @task
-        def load_single_table_bronze(table_name):
-            return create_bronze_for_table(table_name)
+        def load_single_table_bronze(table_name, logical_date=None):
+            execution_date =logical_date.in_timezone('Europe/Amsterdam').format("YYYY-MM-DD")
+            return create_bronze_for_table(table_name=table_name, execution_date=execution_date)
         
         tables = pd.read_csv('src/config/db_tables.txt').squeeze().tolist()
 

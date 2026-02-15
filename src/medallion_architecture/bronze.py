@@ -37,7 +37,7 @@ def spark_jdbc_connection():
 
     return jdbc_url, props
 
-def create_bronze_for_table(table_name):
+def create_bronze_for_table(table_name, execution_date=None):
 
     spark = create_spark_session()
 
@@ -45,7 +45,7 @@ def create_bronze_for_table(table_name):
 
     read_db_tables = spark.read.jdbc(url=jdbc_url, table=f'{table_name}', properties=props)
 
-    read_db_tables.write.mode("overwrite").parquet(f"s3a://lakehouse-classicmodels/bronze/{table_name}")
+    read_db_tables.write.mode("overwrite").parquet(f"s3a://lakehouse-classicmodels/bronze/{table_name}/{execution_date}")
 
     count = read_db_tables.count()
     
