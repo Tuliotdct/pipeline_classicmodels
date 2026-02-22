@@ -1,6 +1,12 @@
 from src.connections.spark_connections import create_spark_session, spark_jdbc_connection
+from dotenv import load_dotenv
+import os
 
 def create_bronze_for_table(table_name, execution_date=None):
+
+    load_dotenv()
+
+    bucket = os.getenv("S3_BUCKET_NAME")
 
     spark = create_spark_session()
 
@@ -8,10 +14,11 @@ def create_bronze_for_table(table_name, execution_date=None):
 
     read_db_tables = spark.read.jdbc(url=jdbc_url, table=f'{table_name}', properties=props)
 
-    read_db_tables.write.mode("overwrite").parquet(f"s3a://lakehouse-classicmodels/bronze/{table_name}/{execution_date}")
+    read_db_tables.write.mode("overwrite").parquet(f"s3a://{bucket}/bronze/{table_name}/{execution_date}")
 
     count = read_db_tables.count()
     
     spark.stop()
     
     return {"table": table_name, "records": count, "status": "success"}
+
