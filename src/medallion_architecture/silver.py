@@ -43,3 +43,14 @@ def last_execution_date(table_name=None):
     list_execution_date = max(list_execution_date) 
 
     return list_execution_date
+
+
+def create_silver_for_table(table_name, execution_date):
+    spark = create_spark_session()
+    try:
+        df = spark.read.parquet(f"s3a://{bucket}/bronze/{table_name}/{execution_date}")
+        df.write.mode("overwrite").parquet(f"s3a://{bucket}/silver/{table_name}")
+        return {"table": table_name, "execution_date": execution_date, "records": df.count(), "status": "success"}
+    finally:
+        spark.stop()
+
