@@ -6,7 +6,6 @@ import pandas as pd
 
 tables = pd.read_csv('src/config/db_tables.txt', header=None).squeeze().tolist()
 
-print(tables)
 @dag(
     dag_id='bronze_dag',
     schedule='@daily',
