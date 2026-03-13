@@ -45,12 +45,14 @@ def last_execution_date(table_name=None):
     return list_execution_date
 
 
-def create_silver_for_table(table_name, execution_date):
+def create_current_silver_for_table(table_name):
+    current_execution_date = last_execution_date(table_name)
     spark = create_spark_session()
     try:
-        df = spark.read.parquet(f"s3a://{bucket}/bronze/{table_name}/{execution_date}")
-        df.write.mode("overwrite").parquet(f"s3a://{bucket}/silver/{table_name}")
-        return {"table": table_name, "execution_date": execution_date, "records": df.count(), "status": "success"}
+        df = spark.read.parquet(f"s3a://{bucket}/bronze/{table_name}/{current_execution_date}")
+        df.write.mode("overwrite").parquet(f"s3a://{bucket}/silver_current/{table_name}")
+        return {"table": table_name, "execution_date": current_execution_date, "records": df.count(), "status": "success"}
     finally:
         spark.stop()
+
 
