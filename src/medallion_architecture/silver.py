@@ -1,7 +1,7 @@
 import boto3
 from pyspark.sql import functions as F
 from src.connections.spark_connections import create_spark_session
-from src.config.silver_config import SILVER_TABLE_CONFIG
+from src.config.silver.silver_config import SILVER_TABLE_CONFIG
 from dotenv import load_dotenv
 import os
 

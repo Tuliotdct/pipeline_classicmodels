@@ -2,7 +2,7 @@ from airflow.sdk import dag, task, TaskGroup
 from airflow.providers.standard.operators.empty import EmptyOperator
 import pendulum
 from src.medallion_architecture.silver import create_silver_table
-from src.config.silver_config import SILVER_TABLE_CONFIG
+from src.config.silver.silver_config import SILVER_TABLE_CONFIG
 
 
 @dag(
