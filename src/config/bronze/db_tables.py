@@ -14,3 +14,4 @@ def get_db_tables():
     
 
     return db_tables_txt
+

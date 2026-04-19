@@ -9,6 +9,7 @@ load_dotenv()
 
 bucket = os.getenv("S3_BUCKET_NAME")
 s3 = boto3.client('s3')
+glue = boto3.client('glue')
 
 
 def bronze_tables():
@@ -38,7 +39,16 @@ def last_execution_date(table_name):
 
 
 def _silver_table_exists(spark, table_name):
-    return spark.catalog.tableExists(f"glue_catalog.silver.{table_name}")
+    try:
+        return spark.catalog.tableExists(f"glue_catalog.silver.{table_name}")
+    except Exception as e:
+        if "NotFoundException" in str(e) or "does not exist" in str(e).lower():
+            try:
+                glue.delete_table(DatabaseName="silver", Name=table_name)
+            except glue.exceptions.EntityNotFoundException:
+                pass
+            return False
+        raise
 
 
 def _join_condition(alias_target, alias_source, primary_key):
