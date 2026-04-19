@@ -4,7 +4,7 @@ import pendulum
 from src.medallion_architecture.bronze import create_bronze_for_table
 import pandas as pd
 
-tables = pd.read_csv('src/config/db_tables.txt', header=None).squeeze().tolist()
+tables = pd.read_csv('src/config/bronze/db_tables.txt', header=None).squeeze().tolist()
 
 @dag(
     dag_id='bronze_dag',
@@ -25,7 +25,7 @@ def bronze_dag():
             execution_date =logical_date.in_timezone('Europe/Amsterdam').format("YYYY-MM-DD")
             return create_bronze_for_table(table_name=table_name, execution_date=execution_date)
         
-        tables = pd.read_csv('src/config/db_tables.txt').squeeze().tolist()
+        tables = pd.read_csv('src/config/bronze/db_tables.txt').squeeze().tolist()
 
         for table in tables:
             bronze_task = load_single_table_bronze.override(task_id=f'{table}')(table_name=table)
