@@ -86,6 +86,8 @@ def silver_scd2(table_name, primary_key, execution_date, spark):
         ON {join_on} AND target.is_current = true
         WHEN MATCHED AND ({changed_condition})
             THEN UPDATE SET target.end_date = '{execution_date}', target.is_current = false
+        WHEN NOT MATCHED BY SOURCE AND target.is_current = true
+            THEN UPDATE SET target.end_date = '{execution_date}', target.is_current = false
     """)
 
     spark.sql(f"""
