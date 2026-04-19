@@ -5,30 +5,30 @@ SILVER_TABLE_CONFIG = {
     },
     "employees": {
         "strategy": "scd2",
-        "primary_key": ["employeeNumber"],
+        "primary_key": ["employeenumber"],
     },
     "orders": {
         "strategy": "scd2",
-        "primary_key": ["orderNumber"],
+        "primary_key": ["ordernumber"],
     },
     "products": {
         "strategy": "scd2",
-        "primary_key": ["productCode"],
+        "primary_key": ["productcode"],
     },
     "payments": {
         "strategy": "append",
-        "primary_key": ["customerNumber", "checkNumber"],
+        "primary_key": ["customernumber", "checknumber"],
     },
     "orderdetails": {
         "strategy": "append",
-        "primary_key": ["orderNumber", "productCode"],
+        "primary_key": ["ordernumber", "productcode"],
     },
     "offices": {
         "strategy": "scd1",
-        "primary_key": ["officeCode"],
+        "primary_key": ["officecode"],
     },
     "productlines": {
         "strategy": "scd1",
-        "primary_key": ["productLine"],
+        "primary_key": ["productline"],
     },
 }

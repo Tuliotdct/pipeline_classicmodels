@@ -74,6 +74,7 @@ def silver_scd2(table_name, primary_key, execution_date, spark):
 
     df_new.createOrReplaceTempView("bronze_snapshot")
     join_on = _join_condition("target", "source", primary_key)
+    exists_condition = _join_condition("t2", "source", primary_key)
     data_cols = [c for c in df_new.columns]
     changed_condition = " OR ".join(
         [f"target.{c} <> source.{c}" for c in data_cols]
@@ -94,6 +95,10 @@ def silver_scd2(table_name, primary_key, execution_date, spark):
         INNER JOIN {silver_table} target
             ON {join_on}
         WHERE target.is_current = false AND target.end_date = '{execution_date}'
+        AND NOT EXISTS (
+            SELECT 1 FROM {silver_table} t2
+            WHERE {exists_condition} AND t2.is_current = true AND t2.effective_date = '{execution_date}'
+        )
     """)
 
     spark.sql(f"""
