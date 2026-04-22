@@ -94,12 +94,13 @@ def silver_scd2(table_name, primary_key, execution_date, spark):
         INSERT INTO {silver_table}
         SELECT source.*, '{execution_date}' AS effective_date, null AS end_date, true AS is_current
         FROM bronze_snapshot source
-        INNER JOIN {silver_table} target
-            ON {join_on}
-        WHERE target.is_current = false AND target.end_date = '{execution_date}'
+        WHERE EXISTS (
+            SELECT 1 FROM {silver_table} t2
+            WHERE {exists_condition} AND t2.is_current = false AND t2.end_date = '{execution_date}'
+        )
         AND NOT EXISTS (
             SELECT 1 FROM {silver_table} t2
-            WHERE {exists_condition} AND t2.is_current = true AND t2.effective_date = '{execution_date}'
+            WHERE {exists_condition} AND t2.is_current = true
         )
     """)
 
